@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "../footer/Footer";
 import Banner from "./Banner";
 import "./home.css";
 import Slide from "./Slide";
@@ -33,7 +32,6 @@ const Maincomp = () => {
         <Slide title="Best Seller" />
         <Slide title="UPto 80%" />
       </div>
-      <Footer/>
     </div>
   );
 };
