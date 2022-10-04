@@ -1,7 +1,7 @@
 require("dotenv").config()
 require("./db/conn")
 const express = require("express")
-
+const Products = require("./models/productsSchema")
 const port = 8080
 const app = express()
 
