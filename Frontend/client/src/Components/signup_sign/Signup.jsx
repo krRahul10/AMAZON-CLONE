@@ -3,7 +3,7 @@ import "./signup.css";
 import { NavLink } from "react-router-dom";
 
 const Signup = () => {
-  const [udata, setUdata] = useState({
+  const [userData, setUdata] = useState({
     name: "",
     email: "",
     mobile: "",
@@ -12,14 +12,14 @@ const Signup = () => {
 
   });
 
-  console.log(udata);
+  // console.log(userData);
 
   const adddata = (e) => {
     const { name, value } = e.target;
 
     setUdata(() => {
       return {
-        ...udata,
+        ...userData,
         [name]: value,
       };
     });
@@ -39,7 +39,7 @@ const Signup = () => {
                 <input
                   type="text"
                   name="name"
-                  value={udata.name}
+                  value={userData.name}
                   onChange={adddata}
                   id="name"
                 />
@@ -49,7 +49,7 @@ const Signup = () => {
                 <input
                   type="text"
                   name="email"
-                  value={udata.email}
+                  value={userData.email}
                   onChange={adddata}
                   id="email"
                 />
@@ -59,7 +59,7 @@ const Signup = () => {
                 <input
                   type="number"
                   name="mobile"
-                  value={udata.mobile}
+                  value={userData.mobile}
                   onChange={adddata}
                   id="mobile"
                 />
@@ -69,7 +69,7 @@ const Signup = () => {
                 <input
                   type="password"
                   name="password"
-                  value={udata.password}
+                  value={userData.password}
                   onChange={adddata}
                   id="password"
                 />
@@ -80,9 +80,9 @@ const Signup = () => {
                 <input
                   type="password"
                   name="cpassword"
-                  value={udata.cpassword}
+                  value={userData.cpassword}
                   onChange={adddata}
-                  id="password"
+                  id="cpassword"
                 />
               </div>
               <button className="signin_btn">Continue</button>
