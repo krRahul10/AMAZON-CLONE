@@ -8,7 +8,7 @@ router.get("/getproducts", async (req,res) =>{
     try{
         const productsdata = await Products.find()
         res.status(201).json(productsdata)
-        // console.log("condole data", productsdata)
+        // console.log("console data", productsdata)
 
     }catch(err){
         console.log("error",err.message)

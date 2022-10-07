@@ -11,8 +11,8 @@ const router = require("./routes/router")
 
 
 
-app.use(express.json())
 app.use(cors())
+app.use(express.json())
 app.use(router)
 
 
