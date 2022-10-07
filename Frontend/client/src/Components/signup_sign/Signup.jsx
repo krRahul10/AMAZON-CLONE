@@ -1,29 +1,97 @@
 import React, { useState } from "react";
 import "./signup.css";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  const [userData, setUdata] = useState({
-    name: "",
+  const [userData, setUserData] = useState({
+    fname: "",
     email: "",
     mobile: "",
     password: "",
-    cpassword: ""
-
+    cpassword: "",
   });
 
-  // console.log(userData);
+  console.log(userData);
 
-  const adddata = (e) => {
+  const addData = (e) => {
     const { name, value } = e.target;
 
-    setUdata(() => {
+    setUserData(() => {
       return {
         ...userData,
         [name]: value,
       };
     });
   };
+
+  const sendData = async (e) => {
+    e.preventDefault();
+    const { fname, email, password, mobile, cpassword } = userData;
+
+    if (fname === "") {
+      toast.warn("Please fill your name", {
+        position: "top-center",
+      });
+    } else if (email === "") {
+      toast.warn("Please fill your email", {
+        position: "top-center",
+      });
+    } else if (mobile === "") {
+      toast.warn("Please fill your mobile number", {
+        position: "top-center",
+      });
+    } else if (password === "") {
+      toast.warn("Please fill your password", {
+        position: "top-center",
+      });
+    } else if (cpassword === "") {
+      toast.warn("please fill your confirm password", {
+        position: "top-center",
+      });
+    } else if (password.length < 4) {
+      toast.warn("password length must be more than 4", {
+        position: "top-center",
+      });
+    } else if (cpassword.length < 4) {
+      toast.warn("Confirm password length must be more than 4", {
+        position: "top-center",
+      });
+    } else {
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fname, email, password, mobile, cpassword }),
+      });
+      const data = await res.json();
+      // console.log("data from signup", data);
+
+      if (data.status === 422 || !data) {
+        // alert("Data is Not Present");
+        toast.warn("Invalid Details", {
+          position: "top-center",
+        });
+      } else {
+        // alert("Data add successfully")
+        toast.success("data added successfully", {
+          position: "top-center",
+        });
+
+        setUserData({
+          ...userData,
+          fname: "",
+          email: "",
+          mobile: "",
+          password: "",
+          cpassword: "",
+        });
+      }
+    }
+  };
+
   return (
     <>
       <section>
@@ -38,9 +106,9 @@ const Signup = () => {
                 <label>Your Name</label>
                 <input
                   type="text"
-                  name="name"
-                  value={userData.name}
-                  onChange={adddata}
+                  name="fname"
+                  value={userData.fname}
+                  onChange={addData}
                   id="name"
                 />
               </div>
@@ -50,7 +118,7 @@ const Signup = () => {
                   type="text"
                   name="email"
                   value={userData.email}
-                  onChange={adddata}
+                  onChange={addData}
                   id="email"
                 />
               </div>
@@ -60,7 +128,7 @@ const Signup = () => {
                   type="number"
                   name="mobile"
                   value={userData.mobile}
-                  onChange={adddata}
+                  onChange={addData}
                   id="mobile"
                 />
               </div>
@@ -70,28 +138,31 @@ const Signup = () => {
                   type="password"
                   name="password"
                   value={userData.password}
-                  onChange={adddata}
+                  onChange={addData}
                   id="password"
                 />
               </div>
 
               <div className="form_data">
-                <label>Password</label>
+                <label>Confirm Password</label>
                 <input
                   type="password"
                   name="cpassword"
                   value={userData.cpassword}
-                  onChange={adddata}
+                  onChange={addData}
                   id="cpassword"
                 />
               </div>
-              <button className="signin_btn">Continue</button>
+              <button className="signin_btn" onClick={sendData}>
+                Continue
+              </button>
             </form>
             <div className="signin_info">
               <p>Already have an account?</p>
               <NavLink to="/login">Sign in</NavLink>
             </div>
           </div>
+          <ToastContainer />
         </div>
       </section>
     </>
