@@ -1,8 +1,8 @@
 import React from "react";
 import "react-multi-carousel/lib/styles.css";
-// import Carousel from "react-material-ui-carousel";
 import Carousel from "react-multi-carousel"
 import { Divider } from "@mui/material";
+import { NavLink} from 'react-router-dom'
 // import { products } from "./Productdata";
 import './slide.css'
 
@@ -45,7 +45,9 @@ const Slide = ({title, products}) => {
         itemClass="carousel-item-padding-40-px"
       >
         {products.map((e) => {
+
           return (
+            <NavLink to={`/getproductsone/${e.id}`}>
             <div className="products_items">
               <div className="product_img">
                 <img src={e.url} alt="productsItems" />
@@ -54,6 +56,7 @@ const Slide = ({title, products}) => {
               <p className="products_offer">{e.discount}</p>
               <p className="products_explore">{e.tagline}</p>
             </div>
+            </NavLink>
           );
         })}
       </Carousel>
