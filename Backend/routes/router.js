@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const Products = require("../models/productsSchema");
+const USER = require("../models/userSchema");
 
 // *************GET PRODUCTS API *************
 
@@ -29,6 +30,46 @@ router.get("/getproductsone/:id", async (req, res) => {
     res.status(201).json(individualData);
   } catch (err) {
     res.status(422).json(err.message);
+  }
+});
+
+// ************REGISTER API *******
+
+router.post("/register", async (req, res) => {
+  // console.log(req.body)
+  const { fname, email, mobile, password, cpassword } = req.body;
+
+  if (!fname || !email || !mobile || !password || !cpassword) {
+    res.status(422).json({ error: "Fill the all details" });
+    console.log("not data available");
+  }
+
+  try {
+    const preuser = await USER.findOne({ email: email });
+
+    if (preuser) {
+      res.status(422).json({ error: "this user already present" });
+    } else if (password !== cpassword) {
+      res.status(422).json({ error: "password and cpassword is not match" });
+    } else {
+      const finalUser = new USER({
+        fname,
+        email,
+        mobile,
+        password,
+        cpassword,
+      });
+
+      // password hashing process is always work before save data
+      //here is hashing work with middleware
+
+
+      const storeData = await finalUser.save();
+      console.log(storeData);
+      res.status(201).json(storeData);
+    }
+  } catch (err) {
+    res.status(401).json(err);
   }
 });
 
