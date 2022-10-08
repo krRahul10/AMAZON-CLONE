@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const Products = require("../models/productsSchema");
 const USER = require("../models/userSchema");
+const bcrypt = require("bcryptjs");
 
 // *************GET PRODUCTS API *************
 
@@ -41,7 +42,7 @@ router.post("/register", async (req, res) => {
 
   if (!fname || !email || !mobile || !password || !cpassword) {
     res.status(422).json({ error: "Fill the all details" });
-    console.log("not data available");
+    // console.log("not data available");
   }
 
   try {
@@ -63,13 +64,41 @@ router.post("/register", async (req, res) => {
       // password hashing process is always work before save data
       //here is hashing work with middleware
 
-
       const storeData = await finalUser.save();
-      console.log(storeData);
+      // console.log(storeData);
       res.status(201).json(storeData);
     }
   } catch (err) {
     res.status(401).json(err);
+  }
+});
+
+// ************ LOGIN API *************
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(422).json({ error: "Please fill all the details" });
+  }
+  try {
+    // valid user me database is email aur body ki email check hogi
+    // uske baad wo ek user return hoga database me se
+    const validUser = await USER.findOne({ email: email });
+
+    // isMatch me password match hoga front aur apne database ka
+    // password one way me add hua h isliye bcrypt me compare hoga
+    // phle frontend wala password hoga fir validuser ka password hoga
+
+    const isMatch = await bcrypt.compare(password, validUser.password);
+
+    if (!isMatch) {
+      res.status(424).json({ error: "Invalid Details" });
+    } else {
+      res.status(201).json({ message: "Password Match" });
+    }
+  } catch (err) {
+    res.status(422).json({ error: "Invalid Details" });
   }
 });
 
