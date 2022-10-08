@@ -77,25 +77,26 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  // console.log(email,password)
 
   if (!email || !password) {
-    res.status(422).json({ error: "Please fill all the details" });
+    res.status(400).json({ error: "Please fill all the details" });
   }
   try {
     // valid user me database is email aur body ki email check hogi
     // uske baad wo ek user return hoga database me se
     const validUser = await USER.findOne({ email: email });
 
-    // isMatch me password match hoga front aur apne database ka
+    // isMatch me password match hoga frontend aur apne database ka
     // password one way me add hua h isliye bcrypt me compare hoga
     // phle frontend wala password hoga fir validuser ka password hoga
 
     const isMatch = await bcrypt.compare(password, validUser.password);
 
     if (!isMatch) {
-      res.status(424).json({ error: "Invalid Details" });
+      res.status(400).json({ error: "Invalid Details" });
     } else {
-      res.status(201).json({ message: "Password Match" });
+      res.status(201).json(validUser);
     }
   } catch (err) {
     res.status(422).json({ error: "Invalid Details" });

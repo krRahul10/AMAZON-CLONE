@@ -1,25 +1,68 @@
 import React from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signin = () => {
-  const [logdata, setData] = useState({
+  const [logdata, setLogdata] = useState({
     email: "",
     password: "",
   });
 
-  console.log(logdata)
+  // console.log(logdata);
 
-  const adddata = (e) => {
+  const addData = (e) => {
     const { name, value } = e.target;
 
-    setData(() => {
+    setLogdata(() => {
       return {
         ...logdata,
         [name]: value,
       };
     });
   };
+
+  const sendData = async (e) => {
+    e.preventDefault();
+    const { email, password } = logdata;
+
+    if (email === "") {
+      toast.warn("Please fill your email", {
+        position: "top-center",
+      });
+    } else if (password === "") {
+      toast.warn("Please fill your password", {
+        position: "top-center",
+      });
+    } else {
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      // console.log("data from signin", data);
+
+      if (res.status === 400 || !data) {
+    
+        toast.warn("Invalid Details", {
+          position: "top-center",
+        });
+      } else {
+        // alert("Data add successfully")
+        console.log("data from login ", data);
+        toast.success("User LoggedIn successfully", {
+          position: "top-center",
+        });
+
+        setLogdata({ ...logdata, email: "", password: "" });
+      }
+    }
+  };
+
   return (
     <div>
       <section>
@@ -37,7 +80,7 @@ const Signin = () => {
                   name="email"
                   id="email"
                   value={logdata.email}
-                  onChange={adddata}
+                  onChange={addData}
                   placeholder="Enter Your Email"
                 />
               </div>
@@ -47,12 +90,14 @@ const Signin = () => {
                   type="password"
                   name="password"
                   id="password"
-                  onChange={adddata}
+                  onChange={addData}
                   value={logdata.password}
                   placeholder="At least 6 char"
                 />
               </div>
-              <button className="signin_btn">Continue</button>
+              <button className="signin_btn" onClick={sendData}>
+                Continue
+              </button>
             </form>
             <div className="create_accountinfo">
               <p>New to Amazon?</p>
@@ -62,6 +107,7 @@ const Signin = () => {
             </div>
           </div>
         </div>
+        <ToastContainer/>
       </section>
     </div>
   );
