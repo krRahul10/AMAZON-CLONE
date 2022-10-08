@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  cart: Array,
+  carts: Array,
 });
 
 // this method always use before your model
@@ -67,18 +67,24 @@ userSchema.pre("save", async function (next) {
 // token generate here with the help of instance method
 
 userSchema.methods.generateAuthToken = async function () {
-  
   try {
-
     // token generate jwt sign method se hoga isme 2 parameter pass honge first payload and secretkey
 
-    const generate_token = jwt.sign({ _id: this._id}, secretKey );
+    const generate_token = jwt.sign({ _id: this._id }, secretKey);
     this.tokens = this.tokens.concat({ token: generate_token });
     await this.save();
     return generate_token;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
+};
+
+userSchema.methods.addCartData = async function (cart) {
+  try {
+    this.carts = this.carts.concat(cart);
+    await this.save()
+    return this.carts
+  } catch (err) {console.log("err",err);}
 };
 
 const USER = new mongoose.model("USER", userSchema);
