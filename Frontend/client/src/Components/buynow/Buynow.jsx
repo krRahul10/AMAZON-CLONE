@@ -60,9 +60,9 @@ const Buynow = () => {
                 );
               })}
               <Divider />
-              <Subtotal />
+              <Subtotal item={cartdata}/>
             </div>
-            <Right />
+            <Right item={cartdata} />
           </div>
         </div>
       ) : (

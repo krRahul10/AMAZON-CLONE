@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./signup.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
+  const history = useNavigate()
   const [userData, setUserData] = useState({
     fname: "",
     email: "",
@@ -13,7 +14,7 @@ const Signup = () => {
     cpassword: "",
   });
 
-  console.log(userData);
+  // console.log(userData);
 
   const addData = (e) => {
     const { name, value } = e.target;
@@ -88,6 +89,7 @@ const Signup = () => {
           password: "",
           cpassword: "",
         });
+        // history("/login")
       }
     }
   };
