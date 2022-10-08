@@ -1,13 +1,15 @@
 import { Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { LoginContext } from "../context/ContextProvider";
 import "./cart.css";
 const Cart = () => {
   const { id } = useParams("");
-  // console.log(id);
+  const history = useNavigate()
+  const { account, setAccount} = useContext(LoginContext)
+  // console.log("account", account);
   const [individualdata, setIndividualdata] = useState([]);
-
-  // console.log("individualdata", individualdata);
 
   const getIndividualData = async () => {
     const res = await fetch(`/getproductsone/${id}`, {
@@ -31,6 +33,8 @@ const Cart = () => {
     getIndividualData();
   }, [id]);
 
+  // add to cart function 
+
   const addToCart = async (id) => {
     const checkres = await fetch(`/addcart/${id}`, {
       method: "POST",
@@ -53,6 +57,8 @@ const Cart = () => {
     } else {
       alert("Data added to cart successfully");
       console.log("Data added to cart successfully");
+      setAccount(data1)
+      history("/buynow")
     }
   };
   return (
