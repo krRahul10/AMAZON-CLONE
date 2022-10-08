@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom";
 import "./cart.css";
 const Cart = () => {
   const { id } = useParams("");
-  console.log(id);
+  // console.log(id);
   const [individualdata, setIndividualdata] = useState([]);
 
-  console.log("individualdata", individualdata);
+  // console.log("individualdata", individualdata);
 
   const getIndividualData = async () => {
     const res = await fetch(`/getproductsone/${id}`, {
@@ -17,10 +17,10 @@ const Cart = () => {
       },
     });
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
 
     if (!data || data.status === 422) {
-      console.log("No Data Available");
+      // console.log("No Data Available");
     } else {
       // console.log("GetData")
       setIndividualdata(data);
@@ -30,6 +30,31 @@ const Cart = () => {
   useEffect(() => {
     getIndividualData();
   }, [id]);
+
+  const addToCart = async (id) => {
+    const checkres = await fetch(`/addcart/${id}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        individualdata,
+      }),
+      credentials: "include",
+    });
+
+    const data1 = await checkres.json();
+    console.log("frontend Data in cart", data1);
+
+    if (checkres.status === 401 || !data1) {
+      alert("user Invalid");
+      console.log("User Invalid");
+    } else {
+      alert("Data added to cart successfully");
+      console.log("Data added to cart successfully");
+    }
+  };
   return (
     <div className="cart_section">
       {individualdata && Object.keys(individualdata).length && (
@@ -37,7 +62,12 @@ const Cart = () => {
           <div className="left_cart">
             <img src={individualdata.url} alt="profileImage" />
             <div className="cart_btn">
-              <button className="cart_btn1">Add to Cart</button>
+              <button
+                className="cart_btn1"
+                onClick={() => addToCart(individualdata.id)}
+              >
+                Add to Cart
+              </button>
               <button className="cart_btn2">Buy Now</button>
             </div>
           </div>
@@ -47,21 +77,29 @@ const Cart = () => {
             <Divider />
             <p className="mrp">M.R.P. : ₹{individualdata.price.mrp}.00</p>
             <p>
-            Deal Of the Day: <span style={{ color: "#B12704" }}>₹{individualdata.price.cost}.00</span>
-          </p>
+              Deal Of the Day:{" "}
+              <span style={{ color: "#B12704" }}>
+                ₹{individualdata.price.cost}.00
+              </span>
+            </p>
             <p>
-            You save : : <span style={{ color: "#B12704" }}>₹{individualdata.price.mrp - individualdata.price.cost}.00 ({individualdata.price.discount})</span>
-          </p>
+              You save : :{" "}
+              <span style={{ color: "#B12704" }}>
+                ₹{individualdata.price.mrp - individualdata.price.cost}.00 (
+                {individualdata.price.discount})
+              </span>
+            </p>
             <div className="discount_box">
               <h5>
-                Discount: <span style={{ color: "#111" }}>{individualdata.discount}</span>
+                Discount:{" "}
+                <span style={{ color: "#111" }}>{individualdata.discount}</span>
               </h5>
               <h4>
                 Free Delivery :{" "}
                 <span style={{ color: "#111", fontWeight: "600" }}>
-                  Oct 2 - 10 
+                  Oct 2 - 10
                 </span>
-                 Details
+                Details
               </h4>
               <p>
                 Fastest Delivery{" "}

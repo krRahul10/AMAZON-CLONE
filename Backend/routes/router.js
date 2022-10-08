@@ -119,7 +119,7 @@ router.post("/login", async (req, res) => {
 router.post("/addcart/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const cart = Products.findOne({ _id: id });
+    const cart = await Products.findOne({ id: id });
 
     console.log("Cart value", cart);
 
@@ -136,8 +136,8 @@ router.post("/addcart/:id", authenticate, async (req, res) => {
     }else{
       res.status(401).json({error:"Invalid User"})
     }
-  } catch (err) {
-    res.status(401).json({err:"Invalid User"})
+  } catch (error) {
+    res.status(401).json({error:"Invalid User"})
   }
 });
 
