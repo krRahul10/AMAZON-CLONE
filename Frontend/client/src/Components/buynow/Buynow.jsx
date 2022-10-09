@@ -48,11 +48,16 @@ const Buynow = () => {
                       <div className="item_details">
                         <h3>{elem.title.longTitle}</h3>
                         <h3>{elem.title.shortTitle}</h3>
-                        <h3 className="diffrentprice">73564</h3>
-                        <p className="unusuall">Usually</p>
-                        <p>Elible</p>
-                        <img src="" alt="fullfilled" />
-                        <Option />
+                        <h3 className="diffrentprice">₹{elem.price.cost}.00</h3>
+                        <p className="unusuall">
+                          Usually dispatched in 8 days.
+                        </p>
+                        <p>Eligible for FREE Shipping</p>
+                        <img
+                          src="https://m.media-amazon.com/images/G/31/marketing/fba/fba-badge_18px-2x._CB485942108_.png"
+                          alt="logo"
+                        />
+                        <Option deleteData={elem.id} get={getDataBuy} />
                       </div>
                       <h3 className="item_price">₹{elem.price.cost}.00</h3>
                     </div>
@@ -60,7 +65,7 @@ const Buynow = () => {
                 );
               })}
               <Divider />
-              <Subtotal item={cartdata}/>
+              <Subtotal item={cartdata} />
             </div>
             <Right item={cartdata} />
           </div>

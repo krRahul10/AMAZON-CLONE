@@ -55,8 +55,8 @@ const Cart = () => {
       alert("user Invalid");
       console.log("User Invalid");
     } else {
-      alert("Data added to cart successfully");
-      console.log("Data added to cart successfully");
+      alert("Item added to cart successfully !");
+      // console.log("Data added to cart successfully");
       setAccount(data1)
       history("/buynow")
     }

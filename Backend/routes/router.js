@@ -100,7 +100,7 @@ router.post("/login", async (req, res) => {
     console.log(token);
 
     res.cookie("Amazonweb", token, {
-      expires: new Date(Date.now() + 900000),
+      expires: new Date(Date.now() + 9000000),
       httpOnly: true,
     });
 
@@ -125,31 +125,57 @@ router.post("/addcart/:id", authenticate, async (req, res) => {
 
     const UserContact = await USER.findOne({ _id: req.userID });
 
-    console.log("userContact" , UserContact);
+    console.log("userContact", UserContact);
 
-
-    if(UserContact){
-      const cartData = await UserContact.addCartData(cart)
-      await UserContact.save()
+    if (UserContact) {
+      const cartData = await UserContact.addCartData(cart);
+      await UserContact.save();
       console.log("cartData", cartData);
-      res.status(201).json(UserContact)
-    }else{
-      res.status(401).json({error:"Invalid User"})
+      res.status(201).json(UserContact);
+    } else {
+      res.status(401).json({ error: "Invalid User" });
     }
   } catch (error) {
-    res.status(401).json({error:"Invalid User"})
+    res.status(401).json({ error: "Invalid User" });
   }
 });
 
 // ************** GET CART DETAILS API **************
 
-  router.get('/cartdetails', authenticate, async (req,res) =>{
-    try{
-      const buyUser = await USER.findOne({_id: req.userID})
-      res.status(201).json(buyUser)
-    }catch(error){
-      console.log("error", error)
-    }
-  })
+router.get("/cartdetails", authenticate, async (req, res) => {
+  try {
+    const buyUser = await USER.findOne({ _id: req.userID });
+    res.status(201).json(buyUser);
+  } catch (error) {
+    console.log("error", error);
+  }
+});
+
+// ****************get valid user ***********
+
+router.get("/validuser", authenticate, async (req, res) => {
+  try {
+    const validUserOne = await USER.findOne({ _id: req.userID });
+    res.status(201).json(validUserOne);
+  } catch (error) {
+    console.log("error", error);
+  }
+});
+
+// ********** REMOVE ITEM FROM CART *********
+
+router.delete("/remove/:id", authenticate, async (req, res) => {
+  try {
+    const { id} = req.params
+    req.rootUser.carts = req.rootUser.carts.filter((elem) =>{
+      return elem.id !== id
+    })
+    req.rootUser.save()
+    res.status(201).json(req.rootUser)
+  } catch (error) {
+
+    res.status(401).json(error)
+  }
+});
 
 module.exports = router;

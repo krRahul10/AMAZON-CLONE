@@ -6,11 +6,36 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Avatar from "@mui/material/Avatar";
 import { NavLink } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
+import { useEffect } from "react";
 
 const Navbar = () => {
-  // console.log(id);
   const { account, setAccount } = useContext(LoginContext);
   console.log("account", account);
+
+  const getDetailsValidUser = async () => {
+    const res = await fetch("validuser", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    console.log("data", data);
+
+    if(res.status !== 201){
+      console.log("error");
+    }else{
+      console.log(setAccount(data))
+    }
+
+  }
+
+  useEffect(() => {
+    getDetailsValidUser();
+  }, []);
   return (
     <header>
       <nav>
@@ -34,7 +59,7 @@ const Navbar = () => {
           <div className="cart_btn">
             {account ? (
               <NavLink to="/buynow">
-                <Badge badgeContent={account.carts.length} color="primary">
+                <Badge badgeContent={account.carts.length} color="warning">
                   <ShoppingCartIcon id="icon" />
                 </Badge>
               </NavLink>

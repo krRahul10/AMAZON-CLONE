@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoginContext } from "../context/ContextProvider";
 
 const Signin = () => {
+  const { account, setAccount } = useContext(LoginContext);
   const [logdata, setLogdata] = useState({
     email: "",
     password: "",
@@ -44,16 +46,14 @@ const Signin = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      // console.log("data from signin", data);
 
       if (res.status === 400 || !data) {
-    
         toast.warn("Invalid Details", {
           position: "top-center",
         });
       } else {
-        // alert("Data add successfully")
         console.log("data from login ", data);
+        setAccount(data);
         toast.success("User LoggedIn successfully", {
           position: "top-center",
         });
@@ -107,7 +107,7 @@ const Signin = () => {
             </div>
           </div>
         </div>
-        <ToastContainer/>
+        <ToastContainer />
       </section>
     </div>
   );
