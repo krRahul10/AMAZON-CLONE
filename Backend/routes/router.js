@@ -166,15 +166,30 @@ router.get("/validuser", authenticate, async (req, res) => {
 
 router.delete("/remove/:id", authenticate, async (req, res) => {
   try {
-    const { id} = req.params
-    req.rootUser.carts = req.rootUser.carts.filter((elem) =>{
-      return elem.id !== id
-    })
-    req.rootUser.save()
-    res.status(201).json(req.rootUser)
+    const { id } = req.params;
+    req.rootUser.carts = req.rootUser.carts.filter((elem) => {
+      return elem.id !== id;
+    });
+    req.rootUser.save();
+    res.status(201).json(req.rootUser);
   } catch (error) {
+    res.status(401).json(error);
+  }
+});
 
-    res.status(401).json(error)
+// *********** LOGOUT USER API ******
+
+router.get("/logout", authenticate, async (req, res) => {
+  try {
+    req.rootUser.tokens = req.rootUser.tokens.filter((elem) => {
+      return elem.token !== req.token;
+    });
+    res.clearCookie("Amazonweb", { path: "/" });
+    req.rootUser.save()
+    res.status(201).json(req.rootUser.tokens)
+    console.log("user LogOut")
+  } catch (err) {
+   console.log(err);
   }
 });
 
