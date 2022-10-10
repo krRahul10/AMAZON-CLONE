@@ -95,7 +95,12 @@ router.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, validUser.password);
 
-    // token generate after isMatch complete bcoz afterthat we have valid user
+    
+
+    if (!isMatch) {
+      res.status(400).json({ error: "Invalid Details" });
+    } else {
+      // token generate after isMatch complete bcoz afterthat we have valid user
 
     const token = await validUser.generateAuthToken();
     // console.log(token);
@@ -104,10 +109,6 @@ router.post("/login", async (req, res) => {
       expires: new Date(Date.now() + 9000000),
       httpOnly: true,
     });
-
-    if (!isMatch) {
-      res.status(400).json({ error: "Invalid Details" });
-    } else {
       res.status(201).json(validUser);
     }
   } catch (err) {
