@@ -13,7 +13,7 @@ body{
     font-family: 'Open Sans', sans-serif;
 }
 
-/* .circle{
+.circle{
     width: 100%;
     height: 100vh;
     display: flex;
@@ -23,4 +23,4 @@ body{
 
 .circle h2{
     margin-left: 10px;
-} */
+}

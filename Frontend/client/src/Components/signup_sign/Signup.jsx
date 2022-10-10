@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  const history = useNavigate()
+  // const history = useNavigate()
   const [userData, setUserData] = useState({
     fname: "",
     email: "",
@@ -28,69 +28,70 @@ const Signup = () => {
   };
 
   const sendData = async (e) => {
-    e.preventDefault();
-    const { fname, email, password, mobile, cpassword } = userData;
-
-    if (fname === "") {
-      toast.warn("Please fill your name", {
-        position: "top-center",
-      });
-    } else if (email === "") {
-      toast.warn("Please fill your email", {
-        position: "top-center",
-      });
-    } else if (mobile === "") {
-      toast.warn("Please fill your mobile number", {
-        position: "top-center",
-      });
-    } else if (password === "") {
-      toast.warn("Please fill your password", {
-        position: "top-center",
-      });
-    } else if (cpassword === "") {
-      toast.warn("please fill your confirm password", {
-        position: "top-center",
-      });
-    } else if (password.length < 4) {
-      toast.warn("password length must be more than 4", {
-        position: "top-center",
-      });
-    } else if (cpassword.length < 4) {
-      toast.warn("Confirm password length must be more than 4", {
-        position: "top-center",
-      });
-    } else {
-      const res = await fetch("/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fname, email, password, mobile, cpassword }),
-      });
-      const data = await res.json();
-      // console.log("data from signup", data);
-
-      if (data.status === 422 || !data) {
-        // alert("Data is Not Present");
-        toast.warn("Invalid Details", {
+    try{
+      e.preventDefault();
+      const { fname, email, password, mobile, cpassword } = userData;
+  
+      if (fname === "") {
+        toast.warn("Please fill your name 👎!", {
+          position: "top-center",
+        });
+      } else if (email === "") {
+        toast.warn("Please fill your email 👎!", {
+          position: "top-center",
+        });
+      } else if (mobile === "") {
+        toast.warn("Please fill your mobile number 👎!", {
+          position: "top-center",
+        });
+      } else if (password === "") {
+        toast.warn("Please fill your password 👎!", {
+          position: "top-center",
+        });
+      } else if (cpassword === "") {
+        toast.warn("please fill your confirm password 👎!", {
+          position: "top-center",
+        });
+      } else if (password.length < 4) {
+        toast.warn("password length must be more than 4 👎!", {
+          position: "top-center",
+        });
+      } else if (cpassword.length < 4) {
+        toast.warn("Confirm password length must be more than 4 👎!", {
           position: "top-center",
         });
       } else {
-        // alert("Data add successfully")
-        toast.success("data added successfully", {
-          position: "top-center",
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fname, email, password, mobile, cpassword }),
         });
-
-        setUserData({
-          ...userData,
-          fname: "",
-          email: "",
-          mobile: "",
-          password: "",
-          cpassword: "",
-        });
-        // history("/login")
+        const data = await res.json();
+  
+        if (data.status === 422 || !data) {
+          // alert("Data is Not Present");
+          toast.warn("Invalid Details 👎!", {
+            position: "top-center",
+          });
+        } else {
+          toast.success("User Register Successfully 😃!", {
+            position: "top-center",
+          });
+  
+          setUserData({
+            ...userData,
+            fname: "",
+            email: "",
+            mobile: "",
+            password: "",
+            cpassword: "",
+          });
+        }
       }
+    }catch(err){
+console.log("error",err);
     }
   };
 

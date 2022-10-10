@@ -8,7 +8,7 @@ import Right from "./Right";
 import Subtotal from "./Subtotal";
 const Buynow = () => {
   const [cartdata, setCartData] = useState("");
-  console.log("cartdata.carts", cartdata);
+  // console.log("cartdata.carts", cartdata);
 
   const getDataBuy = async () => {
     const res = await fetch("/cartdetails", {

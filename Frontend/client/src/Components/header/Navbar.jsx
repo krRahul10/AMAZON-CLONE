@@ -13,14 +13,21 @@ import Drawer from "@mui/material/Drawer";
 import Rightheader from "./Rightheader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
+  const { products } = useSelector((state) => state.getproductsdata);
   const [dropen, setDropen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const history = useNavigate()
+  const [listopen, setListopen] = useState(true);
+  const [text, setText] = useState("");
+  const history = useNavigate();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -41,7 +48,7 @@ const Navbar = () => {
     });
 
     const data = await res.json();
-    console.log("data", data);
+    // console.log("data", data);
 
     if (res.status !== 201) {
       console.log("error");
@@ -74,12 +81,17 @@ const Navbar = () => {
     if (res1.status !== 201) {
       console.log("error");
     } else {
-      console.log("user LogOut Successfully")
-      alert("user Logout Successfully")
+      toast.success("User Logout Successfully 😃!", {
+        position: "top-center",
+      });
       setAccount(false);
-      history("/")
-     
+      history("/");
     }
+  };
+
+  const getText = (item) => {
+    setText(item);
+    setListopen(false);
   };
 
   useEffect(() => {
@@ -93,7 +105,7 @@ const Navbar = () => {
             <MenuIcon style={{ color: "#fff" }} />
           </IconButton>
           <Drawer open={dropen} onClose={handleDrclose}>
-            <Rightheader logClose={handleDrclose} />
+            <Rightheader logClose={handleDrclose} logoutuser={logoutUser} />
           </Drawer>
           <div className="navlog">
             <NavLink to="/">
@@ -101,10 +113,39 @@ const Navbar = () => {
             </NavLink>
           </div>
           <div className="nav_searchbar">
-            <input type="text" name="" id="" />
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="Search Your Products"
+              onChange={(e) => getText(e.target.value)}
+            />
             <div className="search_icon">
               <SearchIcon id="search" />
             </div>
+
+            {/*  Search Filter */}
+
+            {text && (
+              <List className="extrasearch" hidden={listopen}>
+                {products
+                  .filter((product) =>
+                    product.title.longTitle
+                      .toLowerCase()
+                      .includes(text.toLowerCase())
+                  )
+                  .map((product) => (
+                    <ListItem>
+                      <NavLink
+                        to={`/getproductsone/${product.id}`}
+                        onClick={() => setListopen(true)}
+                      >
+                        {product.title.longTitle}
+                      </NavLink>
+                    </ListItem>
+                  ))}
+              </List>
+            )}
           </div>
         </div>
         <div className="right">
@@ -125,7 +166,7 @@ const Navbar = () => {
                 </Badge>
               </NavLink>
             )}
-
+            <ToastContainer />
             <p>Cart</p>
           </div>
           {account ? (
@@ -161,8 +202,13 @@ const Navbar = () => {
           >
             <MenuItem onClick={handleClose}>My account</MenuItem>
             {account ? (
-              <MenuItem onClick={handleClose}>
-                <LogoutIcon style={{ fontSize: "20px", marginRight: "3px" }} onClick={logoutUser} />{" "}
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  logoutUser();
+                }}
+              >
+                <LogoutIcon style={{ fontSize: "20px", marginRight: "3px" }} />{" "}
                 Logout
               </MenuItem>
             ) : (

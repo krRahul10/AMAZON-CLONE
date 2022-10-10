@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { CircularProgress, Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,10 +6,10 @@ import { LoginContext } from "../context/ContextProvider";
 import "./cart.css";
 const Cart = () => {
   const { id } = useParams("");
-  const history = useNavigate()
-  const { account, setAccount} = useContext(LoginContext)
+  const history = useNavigate();
+  const { account, setAccount } = useContext(LoginContext);
   // console.log("account", account);
-  const [individualdata, setIndividualdata] = useState([]);
+  const [individualdata, setIndividualdata] = useState("");
 
   const getIndividualData = async () => {
     const res = await fetch(`/getproductsone/${id}`, {
@@ -30,10 +30,12 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    getIndividualData();
+    setTimeout(() => {
+      getIndividualData();
+    }, 2000);
   }, [id]);
 
-  // add to cart function 
+  // add to cart function
 
   const addToCart = async (id) => {
     const checkres = await fetch(`/addcart/${id}`, {
@@ -49,7 +51,7 @@ const Cart = () => {
     });
 
     const data1 = await checkres.json();
-    console.log("frontend Data in cart", data1);
+    // console.log("frontend Data in cart", data1);
 
     if (checkres.status === 401 || !data1) {
       alert("user Invalid");
@@ -57,8 +59,8 @@ const Cart = () => {
     } else {
       alert("Item added to cart successfully !");
       // console.log("Data added to cart successfully");
-      setAccount(data1)
-      history("/buynow")
+      setAccount(data1);
+      history("/buynow");
     }
   };
   return (
@@ -129,6 +131,14 @@ const Cart = () => {
             </p>
           </div>
         </div>
+      )}
+      {!individualdata ? (
+        <div className="circle">
+          <CircularProgress color="success" />
+          <h2> Loading....</h2>
+        </div>
+      ) : (
+        ""
       )}
     </div>
   );

@@ -14,7 +14,7 @@ router.get("/getproducts", async (req, res) => {
     // console.log("console data", productsdata)
   } catch (err) {
     res.status(422).json(err.message);
-    console.log("error", err.message);
+    // console.log("error", err.message);
   }
 });
 
@@ -23,7 +23,7 @@ router.get("/getproducts", async (req, res) => {
 router.get("/getproductsone/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
+    // console.log(id);
 
     const individualData = await Products.findOne({ id: id });
 
@@ -63,7 +63,8 @@ router.post("/register", async (req, res) => {
       });
 
       // password hashing process is always work before save data
-      //here is hashing work with middleware
+
+      //here is hashing work with middleware in schema
 
       const storeData = await finalUser.save();
       // console.log(storeData);
@@ -97,7 +98,7 @@ router.post("/login", async (req, res) => {
     // token generate after isMatch complete bcoz afterthat we have valid user
 
     const token = await validUser.generateAuthToken();
-    console.log(token);
+    // console.log(token);
 
     res.cookie("Amazonweb", token, {
       expires: new Date(Date.now() + 9000000),
@@ -121,11 +122,11 @@ router.post("/addcart/:id", authenticate, async (req, res) => {
     const { id } = req.params;
     const cart = await Products.findOne({ id: id });
 
-    console.log("Cart value", cart);
+    // console.log("Cart value", cart);
 
     const UserContact = await USER.findOne({ _id: req.userID });
 
-    console.log("userContact", UserContact);
+    // console.log("userContact", UserContact);
 
     if (UserContact) {
       const cartData = await UserContact.addCartData(cart);
@@ -185,11 +186,11 @@ router.get("/logout", authenticate, async (req, res) => {
       return elem.token !== req.token;
     });
     res.clearCookie("Amazonweb", { path: "/" });
-    req.rootUser.save()
-    res.status(201).json(req.rootUser.tokens)
-    console.log("user LogOut")
+    req.rootUser.save();
+    res.status(201).json(req.rootUser.tokens);
+    console.log("user LogOut");
   } catch (err) {
-   console.log(err);
+    console.log(err);
   }
 });
 
